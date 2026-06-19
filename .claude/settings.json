@@ -1,0 +1,18 @@
+{
+    "permissions": {
+      "deny": [
+        "Read(.env)",
+        "Read(.env.*)",
+        "Read(**/.env)",
+        "Read(**/.env.*)",
+        "Read(**/.aws/credentials)",
+        "Read(**/.aws/config)",
+        "Read(**/secrets/**)",
+        "Read(**/*.pem)",
+        "Read(**/*.key)",
+        "Write(.env)",
+        "Write(.env.*)",
+        "Write(**/.aws/credentials)"
+      ]
+    }
+  }

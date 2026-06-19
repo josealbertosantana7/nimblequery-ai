@@ -1,0 +1,34 @@
+# --- Web API (FastAPI service) ---
+fastapi~=0.115
+uvicorn[standard]~=0.32
+pydantic~=2.9
+python-dotenv~=1.0
+requests~=2.32
+
+# --- Frontend ---
+streamlit~=1.40
+
+# --- LLM / agent stack (LangChain + LangGraph on AWS Bedrock) ---
+langchain~=0.3
+langchain-core~=0.3
+langchain-community~=0.3
+langchain-aws~=0.2
+langchain-text-splitters~=0.3
+langgraph~=0.2
+boto3~=1.35
+
+# --- RAG (PDF loading + vector math) ---
+numpy>=1.26,<3
+pypdf~=5.1
+
+# --- Media generation (text-to-speech + video) ---
+gtts~=2.5
+# NOTE: media_tools.py still mixes moviepy v1/v2 APIs and needs a small fix
+# before the video feature works (flagged separately, not part of this pass).
+moviepy~=2.1
+
+# --- Image generation (Stable Diffusion; heavy, downloads model weights) ---
+torch~=2.5
+diffusers~=0.31
+transformers~=4.46
+accelerate~=1.1

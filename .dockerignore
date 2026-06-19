@@ -1,0 +1,25 @@
+# Keep secrets and local junk out of the image
+.env
+.env.*
+.git/
+.gitignore
+.vscode/
+.claude/
+.DS_Store
+
+# Python caches / envs
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# Generated artifacts
+temp/
+*.mp3
+*.mp4
+temp_uploaded_file.pdf
+
+# The separate AgentCore sub-project is deployed on its own
+hyperLime/

@@ -1,0 +1,43 @@
+# --- Secrets / credentials (NEVER commit) ---
+.env
+.env.*
+!.env.example
+**/.env
+**/.aws/credentials
+**/.aws/config
+*.pem
+*.key
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- Tooling caches ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# --- Generated artifacts ---
+temp/
+*.mp3
+*.mp4
+temp_uploaded_file.pdf
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+*.swp
