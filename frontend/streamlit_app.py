@@ -1,35 +1,32 @@
 import streamlit as st
 import requests
-from app.agents.langgraph_agent import run_agent
 from app.services.image_gen import generate_image
-from langchain_core.messages import HumanMessage, AIMessage
 
-st.title("NimbleQueryAI")
+API_BASE = "http://localhost:8000"  # Update if the API is deployed elsewhere
 
-tab1, tab2 = st.tabs(["Chat with Tools", "Image Generator"])
+st.title("✈️ NimbleQueryAI — Student Pilot Assistant")
+st.caption(
+    "⚠️ For training/study only — not for operational use. Always verify with an official "
+    "preflight briefing, current charts/NOTAMs, the POH, and your CFI."
+)
 
-def convert_history(ui_history):
-    """Convert UI chat history (dicts) to LangChain BaseMessage objects."""
-    converted = []
-    for msg in ui_history:
-        if msg["type"] == "human":
-            converted.append(HumanMessage(content=msg["content"]))
-        elif msg["type"] == "ai":
-            converted.append(AIMessage(content=msg["content"]))
-    return converted
+tab1, tab2 = st.tabs(["Ask the Aviation Assistant", "Image Generator"])
 
 with tab1:
     # ----- Chat UI -----
     if "history" not in st.session_state:
         st.session_state.history = []
 
-    user_input = st.text_input("Ask a question:")
+    user_input = st.text_input("Ask about regulations, weather, traffic, airports or aircraft performance:")
     send_btn = st.button("Send")
 
     if send_btn and user_input:
-        # Convert UI history to BaseMessage objects for agent
-        agent_history = convert_history(st.session_state.history)
-        reply = run_agent(user_input, agent_history)
+        with st.spinner("Routing to the right specialist..."):
+            try:
+                resp = requests.post(f"{API_BASE}/agent", json={"prompt": user_input})
+                reply = resp.json().get("output", "(no response)") if resp.ok else "Error contacting the assistant."
+            except Exception as e:
+                reply = f"Could not reach the API: {e}"
         st.session_state.history.append({"type": "human", "content": user_input})
         st.session_state.history.append({"type": "ai", "content": reply})
 
@@ -40,8 +37,6 @@ with tab1:
 
     st.markdown("---")
     st.subheader("Audio & Video Generation")
-
-    API_BASE = "http://localhost:8000"  # Update if deployed
 
     text = st.text_area("Enter text to convert into audio or video:", key="audio_video_text")
     col1, col2 = st.columns(2)

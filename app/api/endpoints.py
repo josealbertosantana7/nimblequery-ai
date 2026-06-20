@@ -9,7 +9,7 @@ from pydantic import BaseModel
 from app.services.llm_services import generate_text_async
 from app.models.schemas import GenerateRequest, GenerateResponse
 from app.tools.media_tools import speak_text, create_video_with_audio
-from app.agents.langgraph_agent import run_agent
+from app.agents.supervisor import run_supervisor
 from app.services.rag_engine.loader import load_and_split
 from app.services.rag_engine.retriever import add_documents
 from app.services.rag_engine.rag_llm import run_rag_agent
@@ -40,8 +40,8 @@ def generate_video(request: MediaRequest):
 
 @router.post("/agent", response_model=GenerateResponse)
 async def agent_endpoint(payload: GenerateRequest):
-    # run_agent is synchronous (LangGraph .invoke), so run it off the event loop.
-    result = await asyncio.to_thread(run_agent, payload.prompt)
+    # The supervisor graph is synchronous (LangGraph .invoke); run it off the event loop.
+    result = await asyncio.to_thread(run_supervisor, payload.prompt)
     return {"output": result}
 
 

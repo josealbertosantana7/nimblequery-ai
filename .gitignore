@@ -37,6 +37,9 @@ temp/
 *.mp4
 temp_uploaded_file.pdf
 
+# --- Data: vector store, downloaded datasets, source PDFs (don't commit) ---
+data/
+
 # --- OS / editor ---
 .DS_Store
 Thumbs.db
