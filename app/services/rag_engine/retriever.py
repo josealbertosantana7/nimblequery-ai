@@ -15,9 +15,9 @@ from app.utils.logging import get_logger
 logger = get_logger(__name__)
 
 
-def add_documents(doc_id: str, chunks) -> int:
+def add_documents(doc_id: str, chunks, collection: str = "documents") -> int:
     """Embed + persist chunks (LangChain Documents or raw strings) under doc_id."""
-    store = get_vector_store()
+    store = get_vector_store(collection)
     documents = []
     for chunk in chunks:
         text = getattr(chunk, "page_content", chunk)
@@ -25,13 +25,21 @@ def add_documents(doc_id: str, chunks) -> int:
         meta["doc_id"] = doc_id
         documents.append(Document(page_content=text, metadata=meta))
     store.add_documents(documents)
-    logger.info("Indexed %d chunks for doc_id=%s", len(documents), doc_id)
+    logger.info("Indexed %d chunks for doc_id=%s into %s", len(documents), doc_id, collection)
     return len(documents)
 
 
-def retrieve(doc_id: str, query: str, k: Optional[int] = None):
+def retrieve(doc_id: str, query: str, k: Optional[int] = None, collection: str = "documents"):
     """Return the top-k most relevant chunk texts for a query within one doc."""
-    store = get_vector_store()
+    store = get_vector_store(collection)
     k = k or settings.rag_top_k
     results = store.similarity_search(query, k=k, filter={"doc_id": doc_id})
+    return [doc.page_content for doc in results]
+
+
+def retrieve_kb(query: str, k: Optional[int] = None):
+    """Retrieve across the whole aviation knowledge-base collection (no doc filter)."""
+    store = get_vector_store(settings.aviation_kb_collection)
+    k = k or settings.rag_top_k
+    results = store.similarity_search(query, k=k)
     return [doc.page_content for doc in results]
